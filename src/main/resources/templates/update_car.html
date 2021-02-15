@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+    <form id="updateCar" method="post">
+        <label>Car ID</label>
+        <input id="carID" name="carID" type="text" th:value="${modelData.carID}"disabled > </input><br/>
+        <label>Plaka Kodu </label>
+        <input id="plateCode" name="plateCode" type="text" th:value="${modelData.plateCode}"> <br/>
+        <label>Rent A Car ID : </label>
+        <input id="rentACarID" name="rentACarID" type="text" th:value="${modelData.rentACarID}" >
+        <input class="btn-primary" type="submit" value="Güncelle"></input>
+    </form>
+</body>
+<script>
+    $('#updateCar').submit(function (e) {
+        e.preventDefault();
+
+    var carData = {}
+    carData["carID"] = $("#carID").val();
+    carData["plateCode"] = $("#plateCode").val();
+    carData["rentACarID"] = $("#rentACarID").val();
+
+    $.ajax({
+    type: "post",
+    contentType: "application/json",
+    url: "/updatecarpost",
+    data: JSON.stringify(carData),
+    dataType: 'json',
+    success: function (data) {
+
+        window.location.href="/";
+
+
+
+    },
+    error: function (e) {
+        window.location.href="/";
+        console.log(e);
+    // var json = "Ajax Hata"
+    //     + e.responseText;
+    // $('#feedback').html(json);
+
+
+    }
+    });
+    })
+</script>
+</html>

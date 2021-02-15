@@ -1,0 +1,295 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
+    <style>
+        .floatLeft {
+            width: 50%;
+            float: left;
+        }
+
+        .floatRight {
+            width: 50%;
+            float: right;
+        }
+
+        .container {
+            overflow: hidden;
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+<div class="container">
+    <div class="floatLeft">
+        <table class="table table-bordered" id="carTable" style="float:left">
+            <thead>
+            <tr>
+                <th scope="col">CAR ID</th>
+                <th scope="col">PLAKA KODU</th>
+                <th scope="col">RENT A CAR ID</th>
+                <th scope="col">KIRALANDI</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="car : ${modelData.get('left')}" >
+
+                <td th:text="${car.carID}"></td>
+                <td th:text="${car.plateCode}"></td>
+                <td th:text="${car.rentACarID}"></td>
+                <td th:text="${car.rented}"></td>
+
+                <td><button class='btn-info' th:if="${car.rented} != true"  th:data-id="${car.carID}" th:onclick="updateCar(this.getAttribute('data-id'))">Güncelle</button></td>
+                <td><button class='btn-danger' th:if="${car.rented} != true"  th:data-id="${car.carID}" th:onclick="removeCar(this.getAttribute('data-id'))">Sil</button></td>
+                <td><button class='btn-default' th:if="${car.rented} != true AND ${car.rentACarID} != -1"  th:data-id="${car.carID}" th:onclick="rentCar(this.getAttribute('data-id'))">Araç Kirala</button></td>
+            </tr>
+            </tbody>
+        </table>
+        <form id="newCar" method="post">
+            <label>Plaka kodu : </label>
+            <input id="plateCode" name="plateCode" type="text"> <br/>
+            <label>Rent A Car ID : </label>
+            <input id="rentACarID" name="rentACarID" type="text">
+            <input class="btn-primary" type="submit" value="Araba ekle"></input>
+        </form>
+    </div>
+
+
+        <div class="floatRight">
+            <table class="table table-bordered" id="rentACarTable"style="float:left">
+                <thead>
+                <tr>
+                    <th scope="col">RENT A CAR ID</th>
+                    <th scope="col">RENT A CAR ADI</th>
+                    <th scope="col">ARAÇ SAYISI</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="rentACar : ${modelData.get('right')}" >
+
+                    <td th:text="${rentACar.rentACarID}"></td>
+                    <td th:text="${rentACar.rentACarName}"></td>
+                    <td th:text="${rentACar.carCount}"></td>
+
+
+                    <td><button class='btn-info' th:data-id="${rentACar.rentACarID}" th:onclick="updateRentACar(this.getAttribute('data-id'))">Güncelle</button></td>
+                    <td><button class='btn-danger' th:data-id="${rentACar.rentACarID}" th:onclick="removeRentACar(this.getAttribute('data-id'))" >Sil</button></td>
+
+
+
+
+
+                </tr>
+                </tbody>
+            </table>
+            <form id="newRentACar" method="post">
+                <label>RentACar Name : </label>
+                <input id="rentACarName" name="rentACarName" type="text"> <br/>
+                <input class="btn-primary" type="submit" value="RentACar Ekle"></input>
+            </form>
+        </div>
+    </div>
+
+</body>
+
+<script>
+
+
+    $('#newCar').submit(function (e) {
+        e.preventDefault();
+
+        var carData = {}
+        carData["plateCode"] = $("#plateCode").val();
+        carData["rentACarID"] = $("#rentACarID").val();
+
+        $.ajax({
+            type: "post",
+            contentType: "application/json",
+            url: "/newcar",
+            data: JSON.stringify(carData),
+            dataType: 'json',
+            success: function (data) {
+                var carID=data["carID"];
+                var appendRow = "<tr id='"+carID+"'>" +
+                    "<td>" + data["carID"] + "</td>" +
+                    "<td>" + data["plateCode"] + "</td>" +
+                    "<td>" + data["rentACarID"] + "</td>" +
+                    "<td>" + data["rented"] + "</td>" +
+                    "<td><button class='btn-info' >Güncelle</button></td>" +
+                    "<td><button class='btn-danger'  onclick='removeCar("+carID+")'>Sil</button></td>" +
+                    "<td><button class='btn-default'  onclick='rentCar("+carID+")'>Araç Kirala</button></td>" +
+                    "</tr>";
+
+                $('#carTable tr:last').after(
+                    appendRow
+                );
+
+                location.reload();
+
+
+            },
+            error: function (e) {
+
+                console.log(e);
+                // var json = "Ajax Hata"
+                //     + e.responseText;
+                // $('#feedback').html(json);
+
+
+            }
+        });
+    })
+
+    $('#newRentACar').submit(function (e) {
+        e.preventDefault();
+
+        var rentACarData = {}
+        rentACarData["rentACarName"] = $("#rentACarName").val();
+
+
+        $.ajax({
+            type: "post",
+            contentType: "application/json",
+            url: "/newrentacar",
+            data: JSON.stringify(rentACarData),
+            dataType: 'json',
+            success: function (data) {
+                var appendRow = "<tr>" +
+                    "<td>" + data["rentACarID"] + "</td>" +
+                    "<td>" + data["rentACarName"] + "</td>" +
+                    "<td>" + data["carCount"] + "</td>" +
+                    "<td><button class='btn-info' >Güncelle</button></td>" +
+                    "<td><button class='btn-danger'>Sil</button></td>" +
+                    // "<td><button class='btn-danger' id=''>Sil</button></td>" +
+                    "<td><button class='btn-group'>Araç Bırak</button></td>" +
+                    "</tr>";
+
+                $('#rentACarTable tr:last').after(
+                    appendRow
+                );
+                location.reload();
+
+            },
+            error: function (e) {
+
+                console.log(e);
+                // var json = "Ajax Hata"
+                //     + e.responseText;
+                // $('#feedback').html(json);
+
+
+            }
+        });
+    })
+
+
+
+    function removeCar(id){
+        var removeCar = {}
+        removeCar['carID']=id;
+
+        $.ajax({
+            type: "post",
+            contentType: "application/json",
+            url: "/removecar",
+            data: JSON.stringify(removeCar),
+            dataType: 'json',
+            success: function (data) {
+
+                location.reload();
+
+            },
+            error: function (e) {
+
+                console.log(e);
+                // var json = "Ajax Hata"
+                //     + e.responseText;
+                // $('#feedback').html(json);
+
+
+            }
+        });
+
+    }
+    function removeRentACar(id){
+        var removeRentACar = {}
+        removeRentACar['rentACarID']=id;
+
+        $.ajax({
+            type: "post",
+            contentType: "application/json",
+            url: "/removerentacar",
+            data: JSON.stringify(removeRentACar),
+            dataType: 'json',
+            success: function (data) {
+
+                location.reload();
+
+            },
+            error: function (e) {
+
+                console.log(e);
+                // var json = "Ajax Hata"
+                //     + e.responseText;
+                // $('#feedback').html(json);
+
+
+            }
+        });
+
+    }
+    function rentCar(id){
+
+        var rentCar = {}
+        rentCar['carID']=id;
+        $.ajax({
+            type: "post",
+            contentType: "application/json",
+            url: "/rentcar",
+            data: JSON.stringify(rentCar),
+            dataType: 'json',
+            success: function (data) {
+
+                location.reload();
+
+            },
+            error: function (e) {
+
+                console.log(e);
+                // var json = "Ajax Hata"
+                //     + e.responseText;
+                // $('#feedback').html(json);
+
+
+            }
+        });
+    }
+
+    function updateCar(id){
+        window.location.href="/updatecar?id="+id;
+    }
+
+    function updateRentACar(id){
+        window.location.href="/updaterentacar?id="+id;
+    }
+
+
+
+
+
+</script>
+</html>
