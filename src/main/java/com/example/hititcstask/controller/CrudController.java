@@ -8,10 +8,7 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sun.misc.Request;
 
 import javax.validation.Valid;
@@ -32,6 +29,7 @@ public class CrudController extends AbstractController {
                 String errorMessage = errors.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(", "));
                 return new ResponseEntity<>(produceJSONResponse(errorMessage), HttpStatus.BAD_REQUEST);
             }
+            System.out.println("asdasd");
             ResponseNewCar responseNewCar=tableService.addNewCar(requestNewCar);
             return new ResponseEntity<>(responseNewCar, HttpStatus.ACCEPTED);
         }catch (Exception e){
@@ -55,44 +53,7 @@ public class CrudController extends AbstractController {
 
     }
 
-    @RequestMapping(value = "/removecar", method = RequestMethod.POST,
-            produces = "application/json")
-    public ResponseEntity<?> removeCar(@Valid@RequestBody RequestDeleteCar requestDeleteCar, Errors errors){
-        try{
-            if (errors.hasErrors()) {
-                String errorMessage = errors.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(", "));
-                return new ResponseEntity<>(produceJSONResponse(errorMessage), HttpStatus.BAD_REQUEST);
-            }
 
-            tableService.removeCar(requestDeleteCar);
-            ResponseDeleteCar responseDeleteCar=new ResponseDeleteCar();
-            responseDeleteCar.setResult(OK);
-
-            return new ResponseEntity<>(responseDeleteCar,HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(produceJSONResponse(INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
-    @RequestMapping(value = "/rentcar", method = RequestMethod.POST,
-            produces = "application/json")
-    public ResponseEntity<?> rentCar(@Valid@RequestBody RequestRentCar requestRentCar, Errors errors){
-        try{
-            if (errors.hasErrors()) {
-                String errorMessage = errors.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(", "));
-                return new ResponseEntity<>(produceJSONResponse(errorMessage), HttpStatus.BAD_REQUEST);
-            }
-
-            tableService.rentCar(requestRentCar);
-            ResponseRentCar responseRentCar=new ResponseRentCar();
-            responseRentCar.setResult(OK);
-            return new ResponseEntity<>(responseRentCar,HttpStatus.ACCEPTED);
-        }catch (Exception e){
-            return new ResponseEntity<>(produceJSONResponse(INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
 
     @RequestMapping(value = "/updatecarpost", method = RequestMethod.POST,
             produces = "application/json")
@@ -112,6 +73,7 @@ public class CrudController extends AbstractController {
         }
 
     }
+
     @RequestMapping(value = "/updaterentacarpost", method = RequestMethod.POST,
             produces = "application/json")
     public ResponseEntity<?> updateRentACar(@Valid@RequestBody RequestUpdateRentACar requestUpdateRentACar, Errors errors){
@@ -130,24 +92,21 @@ public class CrudController extends AbstractController {
         }
 
     }
-    @RequestMapping(value = "/removerentacar", method = RequestMethod.POST,
-            produces = "application/json")
-    public ResponseEntity<?> updateRentACar(@Valid@RequestBody RequestRemoveRentACar requestRemoveRentACar, Errors errors){
-        try{
-            if (errors.hasErrors()) {
-                String errorMessage = errors.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(", "));
-                return new ResponseEntity<>(produceJSONResponse(errorMessage), HttpStatus.BAD_REQUEST);
-            }
 
-            tableService.removeRentACar(requestRemoveRentACar);
-            ResponseRemoveRentACar responseRemoveRentACar=new ResponseRemoveRentACar();
-            responseRemoveRentACar.setResult(OK);
-            return new ResponseEntity<>(requestRemoveRentACar,HttpStatus.ACCEPTED);
+    @RequestMapping(value = "/getallrentacarids", method = RequestMethod.GET,
+            produces = "application/json")
+    public ResponseEntity<?> allRentACarIDS(){
+        try{
+
+            ResponseAllRentACar responseAllRentACar=tableService.getAllRentACarIDS();
+
+            return new ResponseEntity<>(responseAllRentACar,HttpStatus.ACCEPTED);
         }catch (Exception e){
             return new ResponseEntity<>(produceJSONResponse(INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
+
 
 
 }

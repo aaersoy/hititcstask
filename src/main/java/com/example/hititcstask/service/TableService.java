@@ -13,13 +13,13 @@ public interface TableService {
     ResponseNewCar addNewCar(RequestNewCar requestNewCar) throws Exception;
     ResponseNewRentACar addRentACar(RequestNewRentACar requestNewRentACar) throws Exception;
 
-    void removeCar(RequestDeleteCar requestDeleteCar);
+    void removeCar(Long carID);
 
     void getCarData(List<Map<String, Object>> left);
 
     void getRentACarData(List<Map<String, Object>> right);
 
-    void rentCar(RequestRentCar requestRentCar);
+    void rentCar(Long carID);
 
     void searchCarWithKey(String key, List<Map<String, Object>> left);
 
@@ -30,5 +30,9 @@ public interface TableService {
 
     void updateRentACar(RequestUpdateRentACar requestUpdateRentACar) throws Exception;
 
-    void removeRentACar(RequestRemoveRentACar requestRemoveRentACar) throws Exception;
+    void removeRentACar(Long rentACarID) throws Exception;
+
+    void searchRentACarWithKey(String key, List<Map<String, Object>> right);
+
+    ResponseAllRentACar getAllRentACarIDS();
 }

@@ -36,7 +36,7 @@ public class TableServiceImpl implements TableService {
             car= new Car();
             car.setPlateCode(requestNewCar.getPlateCode());
             car.setRented(false);
-            RentACar rentACar = rentACarRepository.getRentACarbyID(Long.parseLong(requestNewCar.getRentACarID()));
+            RentACar rentACar = rentACarRepository.getOne(Long.parseLong(requestNewCar.getRentACarID()));
             carRepository.save(car);
             if (rentACar == null) {
                 car.setRentACar(null);
@@ -82,15 +82,15 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public void removeCar(RequestDeleteCar requestDeleteCar) {
+    public void removeCar(Long carID) {
 
-
-        Car car=carRepository.getOne(new Long(requestDeleteCar.getCarID()));
-        RentACar rentACar=car.getRentACar();
-        rentACar.getCarList().remove(car);
+        Car car=carRepository.getOne(carID);
+        if(car.getRentACar()!=null){
+            RentACar rentACar=car.getRentACar();
+            rentACar.getCarList().remove(car);
+            rentACarRepository.save(rentACar);
+        }
         carRepository.delete(car);
-        rentACarRepository.save(rentACar);
-
     }
 
     @Override
@@ -122,9 +122,9 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public void rentCar(RequestRentCar requestRentCar) {
+    public void rentCar(Long carID) {
 
-        Car car=carRepository.getWithID(new Long(requestRentCar.getCarID()));
+        Car car=carRepository.getWithID(carID);
         car.setRented(true);
         carRepository.save(car);
 
@@ -132,8 +132,13 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public void searchCarWithKey(String key,List<Map<String, Object>> left) {
+
+
         for(Car car : carRepository.findAll()){
-            if(car.getPlateCode().contains(key)){
+            if(car.getPlateCode().contains(key) || car.getCarID().toString().contains(key)
+                    || new Boolean(car.isRented()).toString().contains(key)
+                    || new Long(car.getRentACar().getRentACarID()).toString().contains(key)
+            ){
             HashMap<String,Object> element=new HashMap<>();
             element.put("carID",car.getCarID());
             element.put("plateCode",car.getPlateCode());
@@ -163,7 +168,7 @@ public class TableServiceImpl implements TableService {
     public void updateCar(RequestUpdateCar requestUpdateCar) throws Exception {
         Car car=carRepository.getWithID(requestUpdateCar.getCarID());
         RentACar rentACar=rentACarRepository.getRentACarbyID(requestUpdateCar.getRentACarID());
-        System.out.println(rentACar);
+
         if(rentACar == null){
             throw new Exception();
         }
@@ -201,12 +206,38 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public void removeRentACar(RequestRemoveRentACar requestRemoveRentACar) throws Exception {
-        RentACar rentACar=rentACarRepository.getRentACarbyID(requestRemoveRentACar.getRentACarID());
+    public void removeRentACar(Long rentACarID) throws Exception {
+        RentACar rentACar=rentACarRepository.getOne(rentACarID);
         for(Car car : rentACar.getCarList()){
-            car.setRentACar(null);
-            carRepository.save(car);
+            carRepository.delete(car);
         }
         rentACarRepository.delete(rentACar);
+    }
+
+    @Override
+    public void searchRentACarWithKey(String key, List<Map<String, Object>> right) {
+
+        for(RentACar rentACar : rentACarRepository.findAll()){
+            if(rentACar.getRentACarName().contains(key) || rentACar.getRentACarID().toString().contains(key) ||
+                    new Integer(rentACar.getCarList().size()).toString().contains(key)
+            ){
+                HashMap<String,Object> element=new HashMap<>();
+                element.put("rentACarID",rentACar.getRentACarID());
+                element.put("rentACarName",rentACar.getRentACarName());
+                element.put("carCount", rentACar.getCarList().size());
+                right.add(element);
+            }
+        }
+    }
+
+    @Override
+    public ResponseAllRentACar getAllRentACarIDS() {
+        ResponseAllRentACar responseAllRentACar=new ResponseAllRentACar();
+        List<Long> rentACarList=new ArrayList<>();
+        for(RentACar rentACar : rentACarRepository.findAll()){
+            rentACarList.add(rentACar.getRentACarID() );
+        }
+        responseAllRentACar.setRentACarList(rentACarList);
+        return responseAllRentACar;
     }
 }

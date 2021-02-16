@@ -8,26 +8,31 @@
     <title>Title</title>
 </head>
 <body>
-<form id="updateRentACar" method="post">
+<form id="updateRentACarForm" method="post">
 
     <label>Rent A Car ID</label>
-    <input id="rentACarID" name="rentACarID" type="text" th:value="${modelData.rentACarID}"disabled > </input><br/>
+    <input id="rentACarIDText" name="rentACarID" type="text" th:value="${modelData.rentACarID}"disabled > </input><br/>
     <label>Rent A Car Adı</label>
-    <input id="rentACarName" name="rentACarName" type="text" th:value="${modelData.rentACarName}"> <br/>
+    <input id="rentACarNameText" name="rentACarName" type="text" th:value="${modelData.rentACarName}"> <br/>
 
     <input class="btn-primary" type="submit" value="Güncelle"></input>
 </form>
 
 </body>
 <script>
-    $('#updateRentACar').submit(function (e) {
+    $('#updateRentACarForm').submit(function (e) {
         e.preventDefault();
 
         var rentACarData = {}
-        rentACarData["rentACarID"] = $("#rentACarID").val();
-        rentACarData["rentACarName"] = $("#rentACarName").val();
+        rentACarData["rentACarID"] = $("#rentACarIDText").val();
+        rentACarData["rentACarName"] = $("#rentACarNameText").val();
+        var regex= /[a-zA-Z]+/;
+        var validRentACarName=regex.test(rentACarData["rentACarName"]);
 
-
+        if(!validRentACarName){
+            alert("Rent A Car adı sadece karakterlerden oluşabilir.")
+        }
+        else{
         $.ajax({
             type: "post",
             contentType: "application/json",
@@ -50,7 +55,7 @@
 
 
             }
-        });
+        });}
     })
 </script>
 </html>
