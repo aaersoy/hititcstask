@@ -8,15 +8,15 @@
     <title>Title</title>
 </head>
 <body>
-    <form id="updateCarForm" method="post">
-        <label>Car ID</label>
-        <input id="carIDText" name="carID" type="text" th:value="${modelData.carID}"disabled > </input><br/>
-        <label>Plaka Kodu </label>
-        <input id="plateCodeText" name="plateCode" type="text" th:value="${modelData.plateCode}"> <br/>
-        <label>Rent A Car ID </label>
-        <select id="rentACarList"></select>
-        <input class="btn-primary" type="submit" value="Güncelle"></input>
-    </form>
+<form id="updateCarForm" method="post">
+    <label>Car ID</label>
+    <input disabled id="carIDText" name="carID" th:value="${modelData.carID}" type="text"> </input><br/>
+    <label>Plaka Kodu </label>
+    <input id="plateCodeText" name="plateCode" th:value="${modelData.plateCode}" type="text"> <br/>
+    <label>Rent A Car ID </label>
+    <select id="rentACarList"></select>
+    <input class="btn-primary" type="submit" value="Güncelle"></input>
+</form>
 </body>
 <script th:src="@{/js/index.js}"></script>
 <script>
@@ -25,37 +25,36 @@
         e.preventDefault();
 
         var carData = {}
-        carData["carID"] =$("#carIDText").val();
+        carData["carID"] = $("#carIDText").val();
         carData["plateCode"] = $("#plateCodeText").val();
         carData["rentACarID"] = $('#rentACarList option:selected').val();
 
-        var regex= /^(0[1–9]|[1–7][0–9]|8[01])(([A-Z])(\d{4,5})|([A-Z]{2})(\d{3,4})|([A-Z]{3})(\d{2,3}))$/;
+        var regex = /^(0[1–9]|[1–7][0–9]|8[01])(([A-Z])(\d{4,5})|([A-Z]{2})(\d{3,4})|([A-Z]{3})(\d{2,3}))$/;
 
-        var validPlateCode=regex.test(carData["plateCode"]);
+        var validPlateCode = regex.test(carData["plateCode"]);
 
-        if(!validPlateCode){
+        if (!validPlateCode) {
             alert("Plaka kodu formata uygun değil.")
+        } else {
+            $.ajax({
+                type: "post",
+                contentType: "application/json",
+                url: "/updatecarpost",
+                data: JSON.stringify(carData),
+                dataType: 'json',
+                success: function (data) {
+
+                    window.location.href = "/";
+
+
+                },
+                error: function (e) {
+                    window.location.href = "/";
+                    console.log(e);
+
+                }
+            });
         }
-        else{
-    $.ajax({
-    type: "post",
-    contentType: "application/json",
-    url: "/updatecarpost",
-    data: JSON.stringify(carData),
-    dataType: 'json',
-    success: function (data) {
-
-        window.location.href="/";
-
-
-
-    },
-    error: function (e) {
-        window.location.href="/";
-        console.log(e);
-
-    }
-    });}
     })
 </script>
 </html>

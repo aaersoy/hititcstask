@@ -2,8 +2,8 @@ package com.example.hititcstask.model;
 
 import lombok.*;
 
-@Data
-@AllArgsConstructor
+@Setter
+@Getter
 @NoArgsConstructor
 public class ResponseNewCar {
 

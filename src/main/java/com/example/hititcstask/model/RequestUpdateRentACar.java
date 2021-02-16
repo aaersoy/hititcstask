@@ -1,17 +1,14 @@
 package com.example.hititcstask.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.validation.constraints.NotNull;
 
-@Data
+
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class RequestUpdateRentACar {
-    @NotNull
+    @NonNull
     private Long rentACarID;
-    @NotNull
+    @NonNull
     private String rentACarName;
 }

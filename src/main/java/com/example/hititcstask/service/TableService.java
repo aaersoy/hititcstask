@@ -35,4 +35,6 @@ public interface TableService {
     void searchRentACarWithKey(String key, List<Map<String, Object>> right);
 
     ResponseAllRentACar getAllRentACarIDS();
+
+    void releaseCar(Long id);
 }

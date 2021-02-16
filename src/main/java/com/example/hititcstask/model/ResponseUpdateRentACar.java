@@ -1,13 +1,11 @@
 package com.example.hititcstask.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ResponseUpdateRentACar {
 
     private String result;

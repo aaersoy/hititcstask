@@ -51,6 +51,7 @@
                 <th scope="col"></th>
                 <th scope="col"></th>
                 <th scope="col"></th>
+                <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -62,6 +63,7 @@
                 <td><button class='btn-info' th:if="${car.rented} != true"  th:data-id="${car.carID}" th:onclick="updateCar(this.getAttribute('data-id'))">Güncelle</button></td>
                 <td><button class='btn-danger' th:if="${car.rented} != true"  th:data-id="${car.carID}" th:onclick="removeCar(this.getAttribute('data-id'))">Sil</button></td>
                 <td><button class='btn-default' th:if="${car.rented} != true"  th:data-id="${car.carID}" th:onclick="rentCar(this.getAttribute('data-id'))">Araç Kirala</button></td>
+                <td><button class='btn-default' th:if="${car.rented} == true"  th:data-id="${car.carID}" th:onclick="releaseCar(this.getAttribute('data-id'))">Araç Bırak</button></td>
             </tr>
             </tbody>
         </table>
@@ -103,7 +105,6 @@
 
                     <td><button class='btn-info' th:data-id="${rentACar.rentACarID}" th:onclick="updateRentACar(this.getAttribute('data-id'))">Güncelle</button></td>
                     <td><button class='btn-danger' th:data-id="${rentACar.rentACarID}" th:onclick="removeRentACar(this.getAttribute('data-id'))" >Sil</button></td>
-
                 </tr>
                 </tbody>
             </table>

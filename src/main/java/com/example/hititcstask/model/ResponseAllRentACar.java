@@ -1,13 +1,11 @@
 package com.example.hititcstask.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Data
-@AllArgsConstructor
+@Setter
+@Getter
 @NoArgsConstructor
 public class ResponseAllRentACar {
     List<Long> rentACarList;

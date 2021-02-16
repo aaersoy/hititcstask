@@ -5,6 +5,7 @@ import com.example.hititcstask.entity.RentACar;
 import com.example.hititcstask.model.*;
 import com.example.hititcstask.repository.CarRepository;
 import com.example.hititcstask.repository.RentACarRepository;
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class TableServiceImpl implements TableService {
     @Qualifier("CarRepository")
     private CarRepository carRepository;
 
+    private static String rentACarID="rentACarID";
 
     @Override
     public ResponseNewCar addNewCar(RequestNewCar requestNewCar) throws Exception{
@@ -38,12 +40,11 @@ public class TableServiceImpl implements TableService {
             car.setRented(false);
             RentACar rentACar = rentACarRepository.getOne(Long.parseLong(requestNewCar.getRentACarID()));
             carRepository.save(car);
-            if (rentACar == null) {
+            if (rentACar==null) {
                 car.setRentACar(null);
-                responseNewCar.setRentACarID(new Long(-1));
+                responseNewCar.setRentACarID( Long.valueOf(-1));
                 responseNewCar.setCarID(car.getCarID());
             } else {
-                System.out.println("asdasdasd");
 
                 car.setRentACar(rentACar);
                 rentACar.getCarList().add(car);
@@ -68,12 +69,12 @@ public class TableServiceImpl implements TableService {
 
         if(rentACar==null){
             rentACar=new RentACar();
-            rentACar.setCarList(new ArrayList<Car>());
+            rentACar.setCarList(new ArrayList<>());
             rentACar.setRentACarName(requestNewRentACar.getRentACarName());
             rentACarRepository.save(rentACar);
             responseNewRentACar.setRentACarID(rentACar.getRentACarID());
             responseNewRentACar.setRentACarName(rentACar.getRentACarName());
-            responseNewRentACar.setCarCount(new Long(rentACar.getCarList().size()));
+            responseNewRentACar.setCarCount(Long.valueOf(rentACar.getCarList().size()));
         }
         else
             throw new Exception();
@@ -101,10 +102,10 @@ public class TableServiceImpl implements TableService {
             element.put("plateCode",car.getPlateCode());
             element.put("rented", car.isRented());
             if(car.getRentACar()==null){
-                element.put("rentACarID",new Long(-1));
+                element.put(rentACarID,Long.valueOf(-1));
             }
             else{
-                element.put("rentACarID",car.getRentACar().getRentACarID());
+                element.put(rentACarID,car.getRentACar().getRentACarID());
             }
             left.add(element);
         }
@@ -114,9 +115,9 @@ public class TableServiceImpl implements TableService {
     public void getRentACarData(List<Map<String, Object>> right) {
         for(RentACar rentACar : rentACarRepository.findAll()){
             HashMap<String,Object> element=new HashMap<>();
-            element.put("rentACarID",rentACar.getRentACarID());
+            element.put(rentACarID,rentACar.getRentACarID());
             element.put("rentACarName",rentACar.getRentACarName());
-            element.put("carCount", new Long(rentACar.getCarList().size()));
+            element.put("carCount",  Long.valueOf(rentACar.getCarList().size()));
             right.add(element);
         }
     }
@@ -124,7 +125,7 @@ public class TableServiceImpl implements TableService {
     @Override
     public void rentCar(Long carID) {
 
-        Car car=carRepository.getWithID(carID);
+        Car car=carRepository.getOne(carID);
         car.setRented(true);
         carRepository.save(car);
 
@@ -136,18 +137,18 @@ public class TableServiceImpl implements TableService {
 
         for(Car car : carRepository.findAll()){
             if(car.getPlateCode().contains(key) || car.getCarID().toString().contains(key)
-                    || new Boolean(car.isRented()).toString().contains(key)
-                    || new Long(car.getRentACar().getRentACarID()).toString().contains(key)
+                    || Boolean.toString(car.isRented()).contains(key)
+                    || Long.toString(car.getRentACar().getRentACarID()).contains(key)
             ){
             HashMap<String,Object> element=new HashMap<>();
             element.put("carID",car.getCarID());
             element.put("plateCode",car.getPlateCode());
             element.put("rented", car.isRented());
             if(car.getRentACar()==null){
-                element.put("rentACarID",new Long(-1));
+                element.put(rentACarID, Long.valueOf(-1));
             }
             else{
-                element.put("rentACarID",car.getRentACar().getRentACarID());
+                element.put(rentACarID,car.getRentACar().getRentACarID());
             }
             left.add(element);
             }
@@ -156,24 +157,24 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public Car getCar(Long carID) {
-       return carRepository.getWithID(carID);
+       return carRepository.getOne(carID);
     }
 
     @Override
     public RentACar getRentACar(Long rentACarID) {
-        return rentACarRepository.getRentACarbyID(rentACarID);
+        return rentACarRepository.getOne(rentACarID);
     }
 
     @Override
     public void updateCar(RequestUpdateCar requestUpdateCar) throws Exception {
-        Car car=carRepository.getWithID(requestUpdateCar.getCarID());
-        RentACar rentACar=rentACarRepository.getRentACarbyID(requestUpdateCar.getRentACarID());
+        Car car=carRepository.getOne(requestUpdateCar.getCarID());
+        RentACar rentACar=rentACarRepository.getOne(requestUpdateCar.getRentACarID());
 
         if(rentACar == null){
             throw new Exception();
         }
         else{
-            System.out.println("else");
+
             if(car.getRentACar()==null){
                 rentACar.getCarList().add(car);
                 rentACarRepository.save(rentACar);
@@ -196,12 +197,12 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public void updateRentACar(RequestUpdateRentACar requestUpdateRentACar) throws Exception {
-        RentACar rentACar=rentACarRepository.getRentACarbyID(requestUpdateRentACar.getRentACarID());
+        RentACar rentACar=rentACarRepository.getOne(requestUpdateRentACar.getRentACarID());
         if(rentACar==null)
             throw new Exception();
         else{
             rentACar.setRentACarName(requestUpdateRentACar.getRentACarName());
-        rentACarRepository.save(rentACar);
+            rentACarRepository.save(rentACar);
         }
     }
 
@@ -219,7 +220,7 @@ public class TableServiceImpl implements TableService {
 
         for(RentACar rentACar : rentACarRepository.findAll()){
             if(rentACar.getRentACarName().contains(key) || rentACar.getRentACarID().toString().contains(key) ||
-                    new Integer(rentACar.getCarList().size()).toString().contains(key)
+                   Integer.toString(rentACar.getCarList().size()).contains(key)
             ){
                 HashMap<String,Object> element=new HashMap<>();
                 element.put("rentACarID",rentACar.getRentACarID());
@@ -240,4 +241,14 @@ public class TableServiceImpl implements TableService {
         responseAllRentACar.setRentACarList(rentACarList);
         return responseAllRentACar;
     }
+
+    @Override
+    public void releaseCar(Long id) {
+        Car car=carRepository.getOne(id);
+        car.setRented(false);
+        carRepository.save(car);
+
+    }
+
+
 }

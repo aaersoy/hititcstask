@@ -2,6 +2,7 @@ package com.example.hititcstask.controller;
 
 import com.example.hititcstask.model.*;
 import com.example.hititcstask.service.TableService;
+import jdk.net.SocketFlow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -9,27 +10,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import sun.misc.Request;
+
 
 import javax.validation.Valid;
 import java.util.stream.Collectors;
 
 @RestController
-
 public class CrudController extends AbstractController {
     @Autowired
     @Qualifier("TableServiceImpl")
     TableService tableService;
 
-    @RequestMapping(value = "/newcar", method = RequestMethod.POST,
-           produces = "application/json")
+    @PostMapping(value = "/newcar",produces = "application/json")
     public ResponseEntity<?> newCar(@Valid@RequestBody RequestNewCar requestNewCar, Errors errors){
         try{
             if (errors.hasErrors()) {
                 String errorMessage = errors.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(", "));
                 return new ResponseEntity<>(produceJSONResponse(errorMessage), HttpStatus.BAD_REQUEST);
             }
-            System.out.println("asdasd");
+
             ResponseNewCar responseNewCar=tableService.addNewCar(requestNewCar);
             return new ResponseEntity<>(responseNewCar, HttpStatus.ACCEPTED);
         }catch (Exception e){
@@ -37,8 +36,8 @@ public class CrudController extends AbstractController {
         }
 
     }
-    @RequestMapping(value = "/newrentacar", method = RequestMethod.POST,
-            produces = "application/json")
+
+    @PostMapping(value = "/newrentacar", produces = "application/json")
     public ResponseEntity<?> newRentACar(@Valid@RequestBody RequestNewRentACar requestNewCar, Errors errors){
         try{
             if (errors.hasErrors()) {
@@ -54,16 +53,14 @@ public class CrudController extends AbstractController {
     }
 
 
-
-    @RequestMapping(value = "/updatecarpost", method = RequestMethod.POST,
-            produces = "application/json")
+    @PostMapping(value = "/updatecarpost", produces = "application/json")
     public ResponseEntity<?> updateCar(@Valid@RequestBody RequestUpdateCar requestUpdateCar, Errors errors){
         try{
             if (errors.hasErrors()) {
                 String errorMessage = errors.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(", "));
                 return new ResponseEntity<>(produceJSONResponse(errorMessage), HttpStatus.BAD_REQUEST);
             }
-            System.out.println(requestUpdateCar.getCarID());
+
             tableService.updateCar(requestUpdateCar);
             ResponseUpdateCar responseUpdateCar=new ResponseUpdateCar();
             responseUpdateCar.setResult(OK);
@@ -74,8 +71,7 @@ public class CrudController extends AbstractController {
 
     }
 
-    @RequestMapping(value = "/updaterentacarpost", method = RequestMethod.POST,
-            produces = "application/json")
+    @PostMapping(value = "/updaterentacarpost", produces = "application/json")
     public ResponseEntity<?> updateRentACar(@Valid@RequestBody RequestUpdateRentACar requestUpdateRentACar, Errors errors){
         try{
             if (errors.hasErrors()) {
@@ -93,8 +89,7 @@ public class CrudController extends AbstractController {
 
     }
 
-    @RequestMapping(value = "/getallrentacarids", method = RequestMethod.GET,
-            produces = "application/json")
+    @GetMapping(value = "/getallrentacarids", produces = "application/json")
     public ResponseEntity<?> allRentACarIDS(){
         try{
 
@@ -106,6 +101,7 @@ public class CrudController extends AbstractController {
         }
 
     }
+
 
 
 

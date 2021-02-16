@@ -1,15 +1,13 @@
 package com.example.hititcstask.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name="Car")
-@Data
+@Entity(name = "Car")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Car {

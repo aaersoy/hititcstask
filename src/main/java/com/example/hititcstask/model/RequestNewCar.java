@@ -1,18 +1,14 @@
 package com.example.hititcstask.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;import org.springframework.web.bind.annotation.RequestMapping;
+import lombok.*;
 
-import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class RequestNewCar {
 
-    @NotNull
+    @NonNull
     private String plateCode;
-    @NotNull
+    @NonNull
     private String rentACarID;
 }
