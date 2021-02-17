@@ -1,4 +1,4 @@
-package com.example.hititcstask.service;
+package com.example.hititcstask.service.impl;
 
 import com.example.hititcstask.entity.Car;
 import com.example.hititcstask.entity.RentACar;
@@ -6,6 +6,7 @@ import com.example.hititcstask.exception.ElementExistException;
 import com.example.hititcstask.model.*;
 import com.example.hititcstask.repository.CarRepository;
 import com.example.hititcstask.repository.RentACarRepository;
+import com.example.hititcstask.service.TableAjaxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

@@ -1,9 +1,10 @@
-package com.example.hititcstask.service;
+package com.example.hititcstask.service.impl;
 
 import com.example.hititcstask.entity.Car;
 import com.example.hititcstask.entity.RentACar;
 import com.example.hititcstask.repository.CarRepository;
 import com.example.hititcstask.repository.RentACarRepository;
+import com.example.hititcstask.service.TableQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
