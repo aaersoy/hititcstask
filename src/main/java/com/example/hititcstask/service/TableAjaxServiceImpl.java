@@ -2,9 +2,7 @@ package com.example.hititcstask.service;
 
 import com.example.hititcstask.entity.Car;
 import com.example.hititcstask.entity.RentACar;
-import com.example.hititcstask.exception.CarNotFoundException;
 import com.example.hititcstask.exception.ElementExistException;
-import com.example.hititcstask.exception.RentACarNotFoundException;
 import com.example.hititcstask.model.*;
 import com.example.hititcstask.repository.CarRepository;
 import com.example.hititcstask.repository.RentACarRepository;
@@ -28,9 +26,9 @@ public class TableAjaxServiceImpl implements TableAjaxService {
     private CarRepository carRepository;
 
     @Override
-    public void updateCar(RequestUpdateCar requestUpdateCar) throws CarNotFoundException, RentACarNotFoundException, ElementExistException {
-        Car car = carRepository.getCarByID(requestUpdateCar.getCarID());
-        RentACar rentACar = rentACarRepository.getRentACarByID(requestUpdateCar.getRentACarID());
+    public void updateCar(RequestUpdateCar requestUpdateCar) throws ElementExistException {
+        Car car = carRepository.getOne(requestUpdateCar.getCarID());
+        RentACar rentACar = rentACarRepository.getOne(requestUpdateCar.getRentACarID());
 
         if(carRepository.getCarByPlateCode(requestUpdateCar.getPlateCode())==null){
 
@@ -55,9 +53,9 @@ public class TableAjaxServiceImpl implements TableAjaxService {
     }
 
     @Override
-    public void updateRentACar(RequestUpdateRentACar requestUpdateRentACar) throws CarNotFoundException, RentACarNotFoundException, ElementExistException {
+    public void updateRentACar(RequestUpdateRentACar requestUpdateRentACar) throws  ElementExistException {
         if(rentACarRepository.getRentACarByName(requestUpdateRentACar.getRentACarName())==null){
-        RentACar rentACar = rentACarRepository.getRentACarByID(requestUpdateRentACar.getRentACarID());
+        RentACar rentACar = rentACarRepository.getOne(requestUpdateRentACar.getRentACarID());
         rentACar.setRentACarName(requestUpdateRentACar.getRentACarName());
         rentACarRepository.save(rentACar);
         }else
@@ -76,14 +74,14 @@ public class TableAjaxServiceImpl implements TableAjaxService {
     }
 
     @Override
-    public void addNewCar(RequestNewCar requestNewCar) throws CarNotFoundException, RentACarNotFoundException, ElementExistException {
+    public void addNewCar(RequestNewCar requestNewCar) throws  ElementExistException {
 
 
         if(carRepository.getCarByPlateCode(requestNewCar.getPlateCode())==null) {
             Car car = new Car();
             car.setPlateCode(requestNewCar.getPlateCode());
             car.setRented(false);
-            RentACar rentACar = rentACarRepository.getRentACarByID(Long.parseLong(requestNewCar.getRentACarID()));
+            RentACar rentACar = rentACarRepository.getOne(Long.parseLong(requestNewCar.getRentACarID()));
 
             car.setRentACar(rentACar);
             rentACar.getCarList().add(car);
@@ -95,7 +93,7 @@ public class TableAjaxServiceImpl implements TableAjaxService {
     }
 
     @Override
-    public void addRentACar(RequestNewRentACar requestNewRentACar) throws CarNotFoundException, RentACarNotFoundException, ElementExistException {
+    public void addRentACar(RequestNewRentACar requestNewRentACar) throws ElementExistException {
         if(rentACarRepository.getRentACarByName(requestNewRentACar.getRentACarName())==null){
         RentACar rentACar = new RentACar();
         rentACar.setCarList(new ArrayList<>());

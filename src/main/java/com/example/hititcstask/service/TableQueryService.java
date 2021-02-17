@@ -2,8 +2,6 @@ package com.example.hititcstask.service;
 
 import com.example.hititcstask.entity.Car;
 import com.example.hititcstask.entity.RentACar;
-import com.example.hititcstask.exception.CarNotFoundException;
-import com.example.hititcstask.exception.RentACarNotFoundException;
 
 
 import java.util.List;
@@ -11,17 +9,17 @@ import java.util.Map;
 
 public interface TableQueryService {
 
-    Car getCar(Long carID) throws CarNotFoundException;
+    Car getCar(Long carID) ;
 
-    RentACar getRentACar(Long rentACarID) throws RentACarNotFoundException;
+    RentACar getRentACar(Long rentACarID) ;
 
-    void removeCar(Long carID) throws CarNotFoundException;
+    void removeCar(Long carID) ;
 
-    void removeRentACar(Long rentACarID) throws CarNotFoundException,RentACarNotFoundException;
+    void removeRentACar(Long rentACarID) ;
 
-    void rentCar(Long carID) throws CarNotFoundException;
+    void rentCar(Long carID) ;
 
-    void releaseCar(Long id) throws CarNotFoundException;
+    void releaseCar(Long id) ;
 
     void getCarData(List<Map<String, Object>> carTable, String carIDStr, String plateCodeStr, String rentedStr);
 

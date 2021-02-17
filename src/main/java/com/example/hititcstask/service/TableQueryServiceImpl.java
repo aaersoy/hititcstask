@@ -2,8 +2,6 @@ package com.example.hititcstask.service;
 
 import com.example.hititcstask.entity.Car;
 import com.example.hititcstask.entity.RentACar;
-import com.example.hititcstask.exception.CarNotFoundException;
-import com.example.hititcstask.exception.RentACarNotFoundException;
 import com.example.hititcstask.repository.CarRepository;
 import com.example.hititcstask.repository.RentACarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +26,9 @@ public class TableQueryServiceImpl implements TableQueryService {
     private CarRepository carRepository;
 
     @Override
-    public void removeCar(Long carID) throws CarNotFoundException {
+    public void removeCar(Long carID)  {
 
-        Car car = carRepository.getCarByID(carID);
+        Car car = carRepository.getOne(carID);
         if (car.getRentACar() != null) {
             RentACar rentACar = car.getRentACar();
             rentACar.getCarList().remove(car);
@@ -67,9 +65,9 @@ public class TableQueryServiceImpl implements TableQueryService {
     }
 
     @Override
-    public void rentCar(Long carID) throws CarNotFoundException {
+    public void rentCar(Long carID)  {
 
-        Car car = carRepository.getCarByID(carID);
+        Car car = carRepository.getOne(carID);
         car.setRented(true);
         carRepository.save(car);
 
@@ -99,18 +97,18 @@ public class TableQueryServiceImpl implements TableQueryService {
     }
 
     @Override
-    public Car getCar(Long carID) throws CarNotFoundException {
-        return carRepository.getCarByID(carID);
+    public Car getCar(Long carID) {
+        return carRepository.getOne(carID);
     }
 
     @Override
-    public RentACar getRentACar(Long rentACarID) throws RentACarNotFoundException {
-        return rentACarRepository.getRentACarByID(rentACarID);
+    public RentACar getRentACar(Long rentACarID) {
+        return rentACarRepository.getOne(rentACarID);
     }
 
 
     @Override
-    public void removeRentACar(Long rentACarID) throws CarNotFoundException, RentACarNotFoundException {
+    public void removeRentACar(Long rentACarID)  {
         RentACar rentACar = rentACarRepository.getOne(rentACarID);
         for (Car car : rentACar.getCarList()) {
             carRepository.delete(car);
@@ -136,8 +134,8 @@ public class TableQueryServiceImpl implements TableQueryService {
 
 
     @Override
-    public void releaseCar(Long id) throws CarNotFoundException {
-        Car car = carRepository.getCarByID(id);
+    public void releaseCar(Long id)  {
+        Car car = carRepository.getOne(id);
         car.setRented(false);
         carRepository.save(car);
 
