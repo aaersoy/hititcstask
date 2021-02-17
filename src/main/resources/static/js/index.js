@@ -52,7 +52,7 @@ $('#newCarForm').submit(function (e) {
                     202: function (){
                         window.location.href = "/";
                     },
-                    500:function (){
+                    406:function (){
                         alert("İşlem esnasında bir hata oluştu. Tekrarlayan eleman olabilir .")
                     }
                 }});
@@ -83,7 +83,7 @@ $('#newRentACarForm').submit(function (e) {
                 202: function (){
                     window.location.href = "/";
                 },
-                500: function (){
+                406: function (){
                     alert("İşlem esnasında bir hata oluştu. Tekrarlayan eleman olabilir .")
                 }
             }});}

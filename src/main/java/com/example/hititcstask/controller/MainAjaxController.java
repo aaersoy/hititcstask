@@ -44,7 +44,7 @@ public class MainAjaxController {
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }catch(Exception e){
             logger.error(String.valueOf(Arrays.stream(e.getStackTrace()).findFirst()));
-            return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>( HttpStatus.NOT_ACCEPTABLE);
         }
 
     }
@@ -62,7 +62,7 @@ public class MainAjaxController {
             return new ResponseEntity<>(HttpStatus.ACCEPTED);
         }catch(Exception e){
             logger.error(String.valueOf(Arrays.stream(e.getStackTrace()).findFirst()));
-            return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>( HttpStatus.NOT_ACCEPTABLE);
         }
 
     }
@@ -84,7 +84,7 @@ public class MainAjaxController {
 
         }catch(Exception e){
             logger.error(String.valueOf(Arrays.stream(e.getStackTrace()).findFirst()));
-            return new ResponseEntity<>( HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>( HttpStatus.NOT_ACCEPTABLE);
         }
 
     }
@@ -105,7 +105,7 @@ public class MainAjaxController {
 
         }catch(Exception e){
             logger.error(String.valueOf(Arrays.stream(e.getStackTrace()).findFirst()));
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
 
     }
