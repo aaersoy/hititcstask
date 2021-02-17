@@ -34,7 +34,7 @@ $('#newCarForm').submit(function (e) {
     var carData = {}
     carData["plateCode"] = $("#plateCodeText").val();
     carData["rentACarID"] = $('#rentACarList option:selected').val();
-    var regex= /^[0-9]*$/;
+    var regex= /^\d+$/;
     var validPlateCode=regex.test(carData["plateCode"]);
 
     if(!validPlateCode){
