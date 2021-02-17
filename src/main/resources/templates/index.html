@@ -4,25 +4,10 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet"/>
+    <link th:href="@{/css/index.css}" rel="stylesheet" >
     <script src="/webjars/jquery/3.3.1-1/jquery.min.js"></script>
     <script src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
-    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-    <style>
-        .floatLeft {
-            width: 50%;
-            float: left;
-        }
 
-        .floatRight {
-            width: 50%;
-            float: right;
-        }
-
-        .container {
-            overflow: hidden;
-        }
-
-    </style>
 
 </head>
 <body>
@@ -75,9 +60,9 @@
 
 
         <div class="floatRight">
-            <form id="newRentACar" method="post">
+            <form id="newRentACarForm" method="post">
                 <label>RentACar Name : </label>
-                <input id="rentACarName" name="rentACarName" type="text">
+                <input id="rentACarNameTxt" name="rentACarNameTxt" type="text">
                 <input class="btn-primary" type="submit" value="RentACar Ekle"></input>
             </form>
             <form id="rentACarKeyWordForm" method="get">

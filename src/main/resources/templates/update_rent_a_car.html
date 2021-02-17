@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet"/>
+    <link th:href="@{/css/index.css}" rel="stylesheet" >
     <script src="/webjars/jquery/3.3.1-1/jquery.min.js"></script>
     <script src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
     <title>Title</title>
@@ -11,14 +12,16 @@
 <form id="updateRentACarForm" method="post">
 
     <label>Rent A Car ID</label>
-    <input id="rentACarIDText" name="rentACarID" type="text" th:value="${modelData.rentACarID}"disabled > </input><br/>
+    <input id="rentACarIDText" name="rentACarIDText" type="text" th:value="${modelData.rentACarID}"disabled > </input><br/>
     <label>Rent A Car Adı</label>
-    <input id="rentACarNameText" name="rentACarName" type="text" th:value="${modelData.rentACarName}"> <br/>
+    <input id="rentACarNameText" name="rentACarNameText" type="text" th:value="${modelData.rentACarName}"> <br/>
 
     <input class="btn-primary" type="submit" value="Güncelle"></input>
-</form>
 
+</form>
+<button class="btn-block" onclick="window.location.href='/'" style="width: 100px">Geri</button>
 </body>
+
 <script>
     $('#updateRentACarForm').submit(function (e) {
         e.preventDefault();
@@ -26,11 +29,12 @@
         var rentACarData = {}
         rentACarData["rentACarID"] = $("#rentACarIDText").val();
         rentACarData["rentACarName"] = $("#rentACarNameText").val();
-        var regex= /[a-zA-Z]+/;
+
+        var regex= /[^\s]$/;
         var validRentACarName=regex.test(rentACarData["rentACarName"]);
 
         if(!validRentACarName){
-            alert("Rent A Car adı sadece karakterlerden oluşabilir.")
+            alert("Rent A Car adı formata uygun değil.")
         }
         else{
         $.ajax({
@@ -39,22 +43,15 @@
             url: "/updaterentacarpost",
             data: JSON.stringify(rentACarData),
             dataType: 'json',
-            success: function (data) {
-
-                window.location.href="/";
-
-
-
-            },
-            error: function (e) {
-                window.location.href="/";
-                console.log(e);
-                // var json = "Ajax Hata"
-                //     + e.responseText;
-                // $('#feedback').html(json);
-
-
+            statusCode:{
+                202: function (){
+                    window.location.href = "/";
+                },
+                500: function (){
+                    alert("İşlem esnasında bir hata oluştu. Tekrarlayan eleman olabilir .")
+                }
             }
+
         });}
     })
 </script>

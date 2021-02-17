@@ -17,7 +17,9 @@
     <select id="rentACarList"></select>
     <input class="btn-primary" type="submit" value="Güncelle"></input>
 </form>
+<button class="btn-block" onclick="window.location.href='/'" style="width: 100px" >Geri</button>
 </body>
+
 <script th:src="@{/js/index.js}"></script>
 <script>
 
@@ -29,11 +31,12 @@
         carData["plateCode"] = $("#plateCodeText").val();
         carData["rentACarID"] = $('#rentACarList option:selected').val();
 
-        var regex = /^(0[1–9]|[1–7][0–9]|8[01])(([A-Z])(\d{4,5})|([A-Z]{2})(\d{3,4})|([A-Z]{3})(\d{2,3}))$/;
+        var regex = /^[0-9]*$/;
 
         var validPlateCode = regex.test(carData["plateCode"]);
 
         if (!validPlateCode) {
+            $("#plateCodeText").val();
             alert("Plaka kodu formata uygun değil.")
         } else {
             $.ajax({
@@ -42,16 +45,13 @@
                 url: "/updatecarpost",
                 data: JSON.stringify(carData),
                 dataType: 'json',
-                success: function (data) {
-
-                    window.location.href = "/";
-
-
-                },
-                error: function (e) {
-                    window.location.href = "/";
-                    console.log(e);
-
+                statusCode:{
+                    202: function (){
+                        window.location.href = "/";
+                    },
+                    500:function (){
+                        alert("İşlem esnasında bir hata oluştu. Tekrarlayan eleman olabilir .")
+                    }
                 }
             });
         }
